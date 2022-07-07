@@ -57,6 +57,19 @@ def save
 
 end
 
+def get_word 
+    random = rand(0..9500)
+    count = random
+    lines = File.readlines("./dictionary.txt")
+    word = lines[random].chomp
+    while word.length < 5 && word&.length > 13 do
+        count++
+        word = lines[count].chomp
+    end
+    p word
+
+end
+get_word
 
 word = ["p", "e", "n", "i", "s"]
 empty = ["_","_","_","_","_"]
