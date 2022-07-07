@@ -16,6 +16,10 @@ class Game
         end
     end
 
+    def word
+        return @word
+    end
+
     def guesses_left
         return @guesses_left
     end
@@ -46,9 +50,18 @@ class Game
 
 end
 
-def execute_game(game_object)
+def execute_game()
+    word = get_word
+    empty = get_blank_board(word)
+    game_object = Game.new(word, empty, 7)
+    print game_object.display_board
     while !game_object.is_winner? && game_object.guesses_left > 0
         game_object.get_letter
+    end
+    if game_object.guesses_left == 0 
+        puts "The correct word was #{game_object.word.join}"
+    else 
+        puts "You Win!"
     end
     puts "end"
 end
@@ -66,14 +79,20 @@ def get_word
         count++
         word = lines[count].chomp
     end
-    p word
+    return word.split("")
 
 end
-get_word
 
-word = ["p", "e", "n", "i", "s"]
-empty = ["_","_","_","_","_"]
-example = Game.new(word, empty, 5)
-execute_game(example)
+def get_blank_board(word)
+    blank = []
+    word.length.times do |i| 
+        blank.push("_")
+    end
+    return blank
+end
+
+
+
+execute_game()
 
 
