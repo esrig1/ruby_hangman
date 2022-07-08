@@ -54,10 +54,12 @@ class Game
 
 end
 
-def execute_game()
+def execute_game(game_object = nil)
     word = get_word
     empty = get_blank_board(word)
-    game_object = Game.new(word, empty, 7)
+    if game_object == nil
+        game_object = Game.new(word, empty, 7)
+    end
     print game_object.display_board
     while !game_object.is_winner? && game_object.guesses_left > 0
         save_check = game_object.get_letter
@@ -73,21 +75,9 @@ def execute_game()
     puts "end"
 end
 
-def save(curr_game)
-    
-    if !Dir.exists?("saves")
-        Dir.mkdir("saves")
-    end
-    puts "Enter a name for your save file"
-    name = gets.chomp
-    puts name
-    File.open("saves/#{name}.txt", "w") { |f| f.write(curr_game.to_yaml) }
-
-end
-
 def get_word 
     random = rand(0..9500)
-    count = random
+    count = random.to_int
     lines = File.readlines("./dictionary.txt")
     word = lines[random].chomp
     while word.length < 5 || word&.length > 13 do
@@ -107,7 +97,61 @@ def get_blank_board(word)
 end
 
 
+def save(curr_game)
+    
+    if !Dir.exists?("saves")
+        Dir.mkdir("saves")
+    end
+    puts "Enter a name for your save file"
+    name = gets.chomp
+    puts name
+    File.open("saves/#{name}.yml", "w") do |f| 
+        f.write(curr_game.to_yaml) 
+        f.close
+    end
+    
+    puts "Your game has been saved!"
+    menu
 
-execute_game()
+end
+
+def load(file_name)
+    #begin
+    saved = File.open("saves/#{file_name}")
+    loaded_game = YAML.load(saved,  permitted_classes: [Game])
+    saved.close
+    return loaded_game
+    
+    #rescue
+        #puts "invalid file name, enter a file that exists. Otherwise press e to exit"
+        #input = gets.chomp
+        #if input == "e"
+        #    return
+        #else
+        #load(file_name)
+        #end
+    #end
+    
+end
+
+def menu
+    puts "Enter 1 to start a new game, or 2 to load a save"
+    user_response = gets.chomp
+    if user_response == "1"
+        execute_game()
+    elsif user_response == "2"
+        puts "enter the name of your save file"
+        save_filename = gets.chomp
+        loaded_game = load(save_filename)
+        execute_game(loaded_game)
+    else 
+        puts "invalid response, please try again"
+        menu
+    end
+
+end
+
+
+menu
 
 
