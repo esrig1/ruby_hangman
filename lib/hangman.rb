@@ -69,20 +69,20 @@ def execute_game(game_object = nil)
     end
     if game_object.guesses_left == 0 
         puts "The correct word was #{game_object.word.join}"
+        menu
     elsif game_object.is_winner?
         puts "You Win!"
+        menu
     end
-    puts "end"
+    
 end
 
 def get_word 
-    random = rand(0..9500)
-    count = random.to_int
+    random = rand(0..9999)
     lines = File.readlines("./dictionary.txt")
     word = lines[random].chomp
-    while word.length < 5 || word&.length > 13 do
-        count++
-        word = lines[count].chomp
+    while word&.length < 5 || word&.length > 13 do
+        word = lines[rand(0..9999)].chomp
     end
     return word.split("")
 
@@ -105,7 +105,7 @@ def save(curr_game)
     puts "Enter a name for your save file"
     name = gets.chomp
     puts name
-    File.open("saves/#{name}.yml", "w") do |f| 
+    File.open("saves/#{name}", "w") do |f| 
         f.write(curr_game.to_yaml) 
         f.close
     end
@@ -116,21 +116,17 @@ def save(curr_game)
 end
 
 def load(file_name)
-    #begin
-    saved = File.open("saves/#{file_name}")
+    begin
+    saved = File.open("saves/#{file_name}.yml")
     loaded_game = YAML.load(saved,  permitted_classes: [Game])
     saved.close
     return loaded_game
     
-    #rescue
-        #puts "invalid file name, enter a file that exists. Otherwise press e to exit"
-        #input = gets.chomp
-        #if input == "e"
-        #    return
-        #else
-        #load(file_name)
-        #end
-    #end
+    rescue
+        puts "invalid file name, starting a new game instead"
+        return
+        
+    end
     
 end
 
@@ -141,6 +137,7 @@ def menu
         execute_game()
     elsif user_response == "2"
         puts "enter the name of your save file"
+        puts Dir.entries("saves")
         save_filename = gets.chomp
         loaded_game = load(save_filename)
         execute_game(loaded_game)

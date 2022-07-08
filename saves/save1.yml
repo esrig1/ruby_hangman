@@ -1,22 +1,16 @@
 --- !ruby/object:Game
 curr_guesses:
-- d
 - _
 - _
 - _
-- _
-- _
-- _
+- "n"
 - _
 - _
 word:
+- s
+- o
+- u
+- "n"
 - d
-- i
 - s
-- t
-- r
-- i
-- c
-- t
-- s
-guesses_left: 5
+guesses_left: 3
