@@ -1,0 +1,3 @@
+This is a hangman game coded in ruby, with functionality of being able to save your game state and load it back up at a later time. The purpose of this
+project was to familiarize myself with the concept of serialization, specifically in Ruby. I elected to use yaml for no reason other than its readability
+in text form. This helped me confirm that the correct object was being loaded back into the game. 
