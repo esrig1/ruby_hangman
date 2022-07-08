@@ -1,4 +1,4 @@
-
+require "yaml"
 
 class Game 
 
@@ -74,12 +74,15 @@ def execute_game()
 end
 
 def save(curr_game)
+    
     if !Dir.exists?("saves")
         Dir.mkdir("saves")
     end
     puts "Enter a name for your save file"
     name = gets.chomp
     puts name
+    File.open("saves/#{name}.txt", "w") { |f| f.write(curr_game.to_yaml) }
+
 end
 
 def get_word 
@@ -87,7 +90,7 @@ def get_word
     count = random
     lines = File.readlines("./dictionary.txt")
     word = lines[random].chomp
-    while word.length < 5 && word&.length > 13 do
+    while word.length < 5 || word&.length > 13 do
         count++
         word = lines[count].chomp
     end
