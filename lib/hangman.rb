@@ -35,6 +35,10 @@ class Game
         correct_guess = false
         puts "Enter a letter as your guess, you currently have #{@guesses_left} wrong guess(es) left"
         guess = gets.chomp.downcase
+        if guess == "save"
+            save(self)
+            return 1
+        end
         
         @word.each_with_index do |char, index|
             if char.eql?(guess)
@@ -56,18 +60,26 @@ def execute_game()
     game_object = Game.new(word, empty, 7)
     print game_object.display_board
     while !game_object.is_winner? && game_object.guesses_left > 0
-        game_object.get_letter
+        save_check = game_object.get_letter
+        if save_check == 1
+            break
+        end
     end
     if game_object.guesses_left == 0 
         puts "The correct word was #{game_object.word.join}"
-    else 
+    elsif game_object.is_winner?
         puts "You Win!"
     end
     puts "end"
 end
 
-def save
-
+def save(curr_game)
+    if !Dir.exists?("saves")
+        Dir.mkdir("saves")
+    end
+    puts "Enter a name for your save file"
+    name = gets.chomp
+    puts name
 end
 
 def get_word 
